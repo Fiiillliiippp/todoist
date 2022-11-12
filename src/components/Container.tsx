@@ -8,6 +8,7 @@ export type AppState = {
   onEditTitle: (idList: number, value: string) => void;
   onEditTodo: (idList: number, value: string) => void;
   onTodoDone: (idList: number, checked: boolean) => void;
+  onPriorityChange: (idList: number, value: number) => void;
 };
 
 type Props = {
@@ -61,12 +62,22 @@ const Container = ({ children }: Props) => {
     );
   };
 
+  const handlePriorityChanging = (idList: number, value: number) => {
+    setTodoLists(prevList => 
+      prevList.map(list => {
+        if(list.id === idList) {
+          return {...list, priority: value}
+        }return list
+      }))
+  }
+
   const appState: AppState = {
     lists: todoLists,
     onAddNewList: handleAddNewTodoList,
     onEditTitle: handleEditTitle,
     onEditTodo: handleEditTodo,
     onTodoDone: handleTodoIsDone,
+    onPriorityChange: handlePriorityChanging
   };
 
   return <Provider value={appState}>{children(appState)}</Provider>;

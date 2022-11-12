@@ -1,10 +1,21 @@
-import { Box, Button, Checkbox, Grid, Input, TextareaAutosize } from '@mui/material';
+import { Box, Checkbox, Grid, Input, TextareaAutosize } from '@mui/material';
 import { display } from '@mui/system';
 import { render } from '@testing-library/react';
 import { useState } from 'react';
 import { TodoList } from '../types/types';
 import { useAppContainer } from './Context';
 import ModeEditIcon from '@mui/icons-material/ModeEdit';
+import MoreHorizIcon from '@mui/icons-material/MoreHoriz';
+import {
+  Button,
+  Dialog,
+  DialogTitle,
+  DialogContent,
+  DialogContentText,
+  TextField,
+  DialogActions,
+} from '@mui/material';
+import React from 'react';
 
 type Props = {
   list: TodoList;
@@ -18,6 +29,19 @@ const Todo = ({ list }: Props) => {
   const [isMouseIn, setIsMouseIn] = useState<boolean>(false);
   const [todoIsChecked, setTodoIsChecked] = useState<boolean>(true);
 
+  // ! MUI
+  const [open, setOpen] = React.useState(false);
+
+  const handleClickOpen = () => {
+    setOpen(true);
+  };
+
+  const handleClose = () => {
+    setOpen(false);
+  };
+
+  //Todo
+
   const handleEditTitle = (e: string) => {
     setNewTodoTitle(e);
   };
@@ -27,9 +51,9 @@ const Todo = ({ list }: Props) => {
   };
 
   const handleTodoDone = () => {
-    setTodoIsChecked(!todoIsChecked)
-    onTodoDone(list.id, todoIsChecked)
-  }
+    setTodoIsChecked(!todoIsChecked);
+    onTodoDone(list.id, todoIsChecked);
+  };
 
   if (isEditingTodo) {
     return (
@@ -55,7 +79,7 @@ const Todo = ({ list }: Props) => {
           variant='text'
           onClick={() => {
             onEditTitle(list.id, newTodoTitle);
-            onEditTodo(list.id, newTodoText)
+            onEditTodo(list.id, newTodoText);
             setNewTodoTitle('');
             setIsEditingTodo(false);
           }}
@@ -98,7 +122,7 @@ const Todo = ({ list }: Props) => {
           }}
         >
           <div>
-            <Checkbox size="small" onChange={handleTodoDone} />
+            <Checkbox size='small' onChange={handleTodoDone} />
           </div>
           <div>
             <h2 style={{ margin: '0px', marginTop: '5px' }}>{list.title}</h2>
@@ -106,9 +130,54 @@ const Todo = ({ list }: Props) => {
           </div>
         </div>
         <div className={isMouseIn ? 'editTools' : 'editToolsDisabeled'}>
+          {/* Edit */}
           <Button variant='text' onClick={() => setIsEditingTodo(true)}>
             <ModeEditIcon color='action' />
           </Button>
+          {/* more */}
+          <Button variant='text' onClick={handleClickOpen}>
+            <MoreHorizIcon />
+          </Button>
+          <Dialog open={open} onClose={handleClose} fullWidth={false}
+        maxWidth={"lg"}>
+            <DialogTitle>Edit Todo</DialogTitle>
+            <DialogContent sx={{ textAlign: 'center' }}>
+              <h4 style={{ margin: '15px 0' }}>
+                Set New List Name and Todo Describtion
+              </h4>
+              <Input
+                placeholder={`${list.title}`}
+                value={newTodoTitle}
+                onChange={e => handleEditTitle(e.target.value)}
+              />{' '}
+              <br />
+              <TextareaAutosize
+                minRows={3}
+                style={{ width: 200, marginTop: '15px' }}
+                placeholder={`${list.todo}`}
+                value={newTodoText}
+                onChange={e => handleEditTodoText(e.target.value)}
+              />{' '}
+              <br />
+              <Button
+                variant='text'
+                onClick={() => {
+                  onEditTitle(list.id, newTodoTitle);
+                  onEditTodo(list.id, newTodoText);
+                  setNewTodoTitle('');
+                  setIsEditingTodo(false);
+                }}
+              >
+                Edit todo
+              </Button>
+              <Button variant='text' onClick={() => setIsEditingTodo(false)}>
+                Calcel
+              </Button>
+            </DialogContent>
+            <DialogActions>
+              <Button onClick={handleClose}>Cancel</Button>
+            </DialogActions>
+          </Dialog>
         </div>
       </Box>
     </div>
