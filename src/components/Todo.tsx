@@ -11,7 +11,7 @@ type Props = {
 };
 
 const Todo = ({ list }: Props) => {
-  const { lists, onEditTitle, onTodoDone } = useAppContainer();
+  const { lists, onEditTitle, onEditTodo, onTodoDone } = useAppContainer();
   const [newTodoTitle, setNewTodoTitle] = useState('');
   const [newTodoText, setNewTodoText] = useState('');
   const [isEditingTodo, setIsEditingTodo] = useState<boolean>(false);
@@ -46,7 +46,7 @@ const Todo = ({ list }: Props) => {
         <TextareaAutosize
           minRows={3}
           style={{ width: 200, marginTop: '15px' }}
-          placeholder={`${list.todos}`}
+          placeholder={`${list.todo}`}
           value={newTodoText}
           onChange={e => handleEditTodoText(e.target.value)}
         />{' '}
@@ -54,7 +54,8 @@ const Todo = ({ list }: Props) => {
         <Button
           variant='text'
           onClick={() => {
-            onEditTitle(list.id, newTodoTitle, newTodoText);
+            onEditTitle(list.id, newTodoTitle);
+            onEditTodo(list.id, newTodoText)
             setNewTodoTitle('');
             setIsEditingTodo(false);
           }}
@@ -101,7 +102,7 @@ const Todo = ({ list }: Props) => {
           </div>
           <div>
             <h2 style={{ margin: '0px', marginTop: '5px' }}>{list.title}</h2>
-            <p style={{ margin: '0px', marginTop: '5px' }}>{list.todos}</p>
+            <p style={{ margin: '0px', marginTop: '5px' }}>{list.todo}</p>
           </div>
         </div>
         <div className={isMouseIn ? 'editTools' : 'editToolsDisabeled'}>

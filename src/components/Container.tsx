@@ -5,8 +5,9 @@ import { Provider } from './Context';
 export type AppState = {
   lists: TodoLists;
   onAddNewList: (val: string, todoVal: string) => void;
-  onEditTitle: (idList: number, value: string, todosValue: string) => void;
-  onTodoDone: (idList: number, checked: boolean) => void
+  onEditTitle: (idList: number, value: string) => void;
+  onEditTodo: (idList: number, value: string) => void;
+  onTodoDone: (idList: number, checked: boolean) => void;
 };
 
 type Props = {
@@ -18,27 +19,31 @@ const Container = ({ children }: Props) => {
   const handleAddNewTodoList = (val: string, todoVal: string) => {
     setTodoLists(prevList => [
       ...prevList,
-      { id: prevList.length + 1, title: val, todos: todoVal },
+      { id: prevList.length + 1, title: val, todo: todoVal, priorit: 4 },
     ]);
   };
 
-  const handleEditTitle = (
-    idList: number,
-    value: string,
-    todosValue: string
-  ) => {
+  const handleEditTitle = (idList: number, value: string) => {
     setTodoLists(prevList =>
       prevList.map(list => {
         if (list.id === idList) {
-          if(value.length !== 0 && todosValue.length !== 0) {
-            return { ...list, title: value, todos: todosValue};
-          }else if (value.length !== 0 && todosValue.length === 0) {
-            return { ...list, title: value};
-          } else if (value.length === 0 && todosValue.length !== 0) {
-            return { ...list, todos: todosValue };
-          }else {
-            return { ...list};
+          if (value.length !== 0) {
+            return { ...list, title: value };
           }
+          return { ...list };
+        }
+        return list;
+      })
+    );
+  };
+  const handleEditTodo = (idList: number, value: string) => {
+    setTodoLists(prevList =>
+      prevList.map(list => {
+        if (list.id === idList) {
+          if (value.length !== 0) {
+            return { ...list, todo: value };
+          }
+          return { ...list };
         }
         return list;
       })
@@ -46,19 +51,22 @@ const Container = ({ children }: Props) => {
   };
 
   const handleTodoIsDone = (idList: number, checked: boolean) => {
-    setTodoLists(prevList => 
+    setTodoLists(prevList =>
       prevList.filter(list => {
-        if(list.id === idList && checked === true) {
-          return list.id !== idList
-        }return list
-      }))
-  }
+        if (list.id === idList && checked === true) {
+          return list.id !== idList;
+        }
+        return list;
+      })
+    );
+  };
 
   const appState: AppState = {
     lists: todoLists,
     onAddNewList: handleAddNewTodoList,
     onEditTitle: handleEditTitle,
-    onTodoDone: handleTodoIsDone
+    onEditTodo: handleEditTodo,
+    onTodoDone: handleTodoIsDone,
   };
 
   return <Provider value={appState}>{children(appState)}</Provider>;
