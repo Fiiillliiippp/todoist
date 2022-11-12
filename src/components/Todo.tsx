@@ -1,67 +1,74 @@
-import { Box, Button, Checkbox, Grid, Input, TextareaAutosize } from '@mui/material';
-import { display } from '@mui/system';
-import { render } from '@testing-library/react';
-import { useState } from 'react';
-import { TodoList } from '../types/types';
-import { useAppContainer } from './Context';
-import ModeEditIcon from '@mui/icons-material/ModeEdit';
+import {
+  Box,
+  Button,
+  Checkbox,
+  Grid,
+  Input,
+  TextareaAutosize,
+} from "@mui/material";
+import { display } from "@mui/system";
+import { render } from "@testing-library/react";
+import { useState } from "react";
+import { TodoList } from "../types/types";
+import { useAppContainer } from "./Context";
+import ModeEditIcon from "@mui/icons-material/ModeEdit";
 
 type Props = {
   list: TodoList;
 };
 
 const Todo = ({ list }: Props) => {
-  const { lists, onEditTitle, onTodoDone } = useAppContainer();
-  const [newTodoTitle, setNewTodoTitle] = useState('');
-  const [newTodoText, setNewTodoText] = useState('');
+  const { lists, onEditTitle, onTodoDone } = useAppContainer(); //unused import
+  const [newTodoTitle, setNewTodoTitle] = useState("");
+  const [newTodoText, setNewTodoText] = useState("");
   const [isEditingTodo, setIsEditingTodo] = useState<boolean>(false);
   const [isMouseIn, setIsMouseIn] = useState<boolean>(false);
   const [todoIsChecked, setTodoIsChecked] = useState<boolean>(true);
 
   const handleEditTitle = (e: string) => {
+    //wtf? o tych e sme sa bavili
     setNewTodoTitle(e);
   };
 
   const handleEditTodoText = (e: string) => {
+    //same
     setNewTodoText(e);
   };
 
   const handleTodoDone = () => {
-    setTodoIsChecked(!todoIsChecked)
-    onTodoDone(list.id, todoIsChecked)
-  }
+    setTodoIsChecked(!todoIsChecked);
+    onTodoDone(list.id, todoIsChecked);
+  };
 
   if (isEditingTodo) {
     return (
       <div>
-        <h4 style={{ margin: '15px 0' }}>
+        <h4 style={{ margin: "15px 0" }}>
           Set New List Name and Todo Describtion
         </h4>
         <Input
-          placeholder={`${list.title}`}
+          placeholder={list.title}
           value={newTodoTitle}
-          onChange={e => handleEditTitle(e.target.value)}
-        />{' '}
-        <br />
+          onChange={(e) => handleEditTitle(e.target.value)}
+        />
         <TextareaAutosize
           minRows={3}
-          style={{ width: 200, marginTop: '15px' }}
-          placeholder={`${list.todos}`}
+          style={{ width: 200, marginTop: "15px" }}
+          placeholder={`${list.todos}`} //same 48
           value={newTodoText}
-          onChange={e => handleEditTodoText(e.target.value)}
-        />{' '}
-        <br />
+          onChange={(e) => handleEditTodoText(e.target.value)}
+        />
         <Button
-          variant='text'
+          variant="text"
           onClick={() => {
             onEditTitle(list.id, newTodoTitle, newTodoText);
-            setNewTodoTitle('');
+            setNewTodoTitle("");
             setIsEditingTodo(false);
           }}
         >
           Edit todo
         </Button>
-        <Button variant='text' onClick={() => setIsEditingTodo(false)}>
+        <Button variant="text" onClick={() => setIsEditingTodo(false)}>
           Calcel
         </Button>
       </div>
@@ -72,41 +79,41 @@ const Todo = ({ list }: Props) => {
     <div>
       <Box
         sx={{
-          background: '#f5f5f5',
+          background: "#f5f5f5",
           maxWidth: 650,
-          margin: 'auto',
-          border: '1px solid gray',
+          margin: "auto",
+          border: "1px solid gray",
           borderRadius: 2,
-          textAlign: 'left',
+          textAlign: "left",
           paddingX: 2,
           paddingY: 1,
           marginY: 2,
-          display: 'flex',
-          justifyContent: 'space-between',
-          alignItems: 'center',
+          display: "flex",
+          justifyContent: "space-between",
+          alignItems: "center",
         }}
         onMouseEnter={() => setIsMouseIn(true)}
         onMouseLeave={() => setIsMouseIn(false)}
       >
         <div
           style={{
-            maxWidth: '90%',
-            display: 'flex',
-            justifyContent: 'center',
-            alignItems: 'center',
+            maxWidth: "90%",
+            display: "flex",
+            justifyContent: "center",
+            alignItems: "center",
           }}
         >
           <div>
             <Checkbox size="small" onChange={handleTodoDone} />
           </div>
           <div>
-            <h2 style={{ margin: '0px', marginTop: '5px' }}>{list.title}</h2>
-            <p style={{ margin: '0px', marginTop: '5px' }}>{list.todos}</p>
+            <h2 style={{ margin: "0px", marginTop: "5px" }}>{list.title}</h2>
+            <p style={{ margin: "0px", marginTop: "5px" }}>{list.todos}</p>
           </div>
         </div>
-        <div className={isMouseIn ? 'editTools' : 'editToolsDisabeled'}>
-          <Button variant='text' onClick={() => setIsEditingTodo(true)}>
-            <ModeEditIcon color='action' />
+        <div className={isMouseIn ? "editTools" : "editToolsDisabeled"}>
+          <Button variant="text" onClick={() => setIsEditingTodo(true)}>
+            <ModeEditIcon color="action" />
           </Button>
         </div>
       </Box>
