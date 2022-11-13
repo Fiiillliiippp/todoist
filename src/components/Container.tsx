@@ -1,14 +1,16 @@
 import { useState } from 'react';
-import { TodoLists } from '../types/types';
+import { TodoLists, TodoTags } from '../types/types';
 import { Provider } from './Context';
 
 export type AppState = {
   lists: TodoLists;
+  todoTags: TodoTags;
   onAddNewList: (val: string, todoVal: string) => void;
   onEditTitle: (idList: number, value: string) => void;
   onEditTodo: (idList: number, value: string) => void;
   onTodoDone: (idList: number, checked: boolean) => void;
   onPriorityChange: (idList: number, value: number) => void;
+  onAddTodoTag: (tagText: string) => void;
 };
 
 type Props = {
@@ -16,11 +18,12 @@ type Props = {
 };
 const Container = ({ children }: Props) => {
   const [todoLists, setTodoLists] = useState<TodoLists>([]);
+  const [todoTags, setTodoTags] = useState<TodoTags>([]);
 
   const handleAddNewTodoList = (val: string, todoVal: string) => {
     setTodoLists(prevList => [
       ...prevList,
-      { id: prevList.length + 1, title: val, todo: todoVal, priorit: 4 },
+      { id: prevList.length + 1, title: val, todo: todoVal, priority: 4 },
     ]);
   };
 
@@ -63,21 +66,32 @@ const Container = ({ children }: Props) => {
   };
 
   const handlePriorityChanging = (idList: number, value: number) => {
-    setTodoLists(prevList => 
+    setTodoLists(prevList =>
       prevList.map(list => {
-        if(list.id === idList) {
-          return {...list, priority: value}
-        }return list
-      }))
-  }
+        if (list.id === idList) {
+          return { ...list, priority: value };
+        }
+        return list;
+      })
+    );
+  };
+
+  const handleAddTodoTag = (tagText: string) => {
+    setTodoTags(prevTags => [
+      ...prevTags,
+      { id: prevTags.length + 1, tagText: tagText },
+    ]);
+  };
 
   const appState: AppState = {
     lists: todoLists,
+    todoTags: todoTags,
     onAddNewList: handleAddNewTodoList,
     onEditTitle: handleEditTitle,
     onEditTodo: handleEditTodo,
     onTodoDone: handleTodoIsDone,
-    onPriorityChange: handlePriorityChanging
+    onPriorityChange: handlePriorityChanging,
+    onAddTodoTag: handleAddTodoTag,
   };
 
   return <Provider value={appState}>{children(appState)}</Provider>;

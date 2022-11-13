@@ -1,30 +1,20 @@
-import { Box, Checkbox, Grid, Input, TextareaAutosize } from '@mui/material';
-import { display } from '@mui/system';
-import { render } from '@testing-library/react';
+import { Box, Checkbox } from '@mui/material';
 import { useState } from 'react';
 import { TodoList } from '../types/types';
 import { useAppContainer } from './Context';
-import ModeEditIcon from '@mui/icons-material/ModeEdit';
 import MoreHorizIcon from '@mui/icons-material/MoreHoriz';
-import {
-  Button,
-  Dialog,
-  DialogTitle,
-  DialogContent,
-  DialogContentText,
-  TextField,
-  DialogActions,
-} from '@mui/material';
+import { Button } from '@mui/material';
 import React from 'react';
+import EditTodoDialog from './EditTodoDialog';
+import EditingTodoItem from './EditingTodoItem';
+import OneTodoTag from './OneTodoTag';
 
 type Props = {
   list: TodoList;
 };
 
 const Todo = ({ list }: Props) => {
-  const { lists, onEditTitle, onEditTodo, onTodoDone } = useAppContainer();
-  const [newTodoTitle, setNewTodoTitle] = useState('');
-  const [newTodoText, setNewTodoText] = useState('');
+  const { todoTags, onTodoDone } = useAppContainer();
   const [isEditingTodo, setIsEditingTodo] = useState<boolean>(false);
   const [isMouseIn, setIsMouseIn] = useState<boolean>(false);
   const [todoIsChecked, setTodoIsChecked] = useState<boolean>(true);
@@ -36,20 +26,7 @@ const Todo = ({ list }: Props) => {
     setOpen(true);
   };
 
-  const handleClose = () => {
-    setOpen(false);
-  };
-
   //Todo
-
-  const handleEditTitle = (e: string) => {
-    setNewTodoTitle(e);
-  };
-
-  const handleEditTodoText = (e: string) => {
-    setNewTodoText(e);
-  };
-
   const handleTodoDone = () => {
     setTodoIsChecked(!todoIsChecked);
     onTodoDone(list.id, todoIsChecked);
@@ -58,37 +35,7 @@ const Todo = ({ list }: Props) => {
   if (isEditingTodo) {
     return (
       <div>
-        <h4 style={{ margin: '15px 0' }}>
-          Set New List Name and Todo Describtion
-        </h4>
-        <Input
-          placeholder={`${list.title}`}
-          value={newTodoTitle}
-          onChange={e => handleEditTitle(e.target.value)}
-        />{' '}
-        <br />
-        <TextareaAutosize
-          minRows={3}
-          style={{ width: 200, marginTop: '15px' }}
-          placeholder={`${list.todo}`}
-          value={newTodoText}
-          onChange={e => handleEditTodoText(e.target.value)}
-        />{' '}
-        <br />
-        <Button
-          variant='text'
-          onClick={() => {
-            onEditTitle(list.id, newTodoTitle);
-            onEditTodo(list.id, newTodoText);
-            setNewTodoTitle('');
-            setIsEditingTodo(false);
-          }}
-        >
-          Edit todo
-        </Button>
-        <Button variant='text' onClick={() => setIsEditingTodo(false)}>
-          Calcel
-        </Button>
+        <EditingTodoItem list={list} />
       </div>
     );
   }
@@ -97,7 +44,6 @@ const Todo = ({ list }: Props) => {
     <div>
       <Box
         sx={{
-          background: '#f5f5f5',
           maxWidth: 650,
           margin: 'auto',
           border: '1px solid gray',
@@ -112,6 +58,17 @@ const Todo = ({ list }: Props) => {
         }}
         onMouseEnter={() => setIsMouseIn(true)}
         onMouseLeave={() => setIsMouseIn(false)}
+        className={
+          list.priority === 4
+            ? 'priority4'
+            : list.priority === 3
+            ? 'priority3'
+            : list.priority === 2
+            ? 'priority2'
+            : list.priority === 1
+            ? 'priority1'
+            : ''
+        }
       >
         <div
           style={{
@@ -123,61 +80,34 @@ const Todo = ({ list }: Props) => {
         >
           <div>
             <Checkbox size='small' onChange={handleTodoDone} />
+
+            {/* actual todo title and text */}
           </div>
           <div>
             <h2 style={{ margin: '0px', marginTop: '5px' }}>{list.title}</h2>
             <p style={{ margin: '0px', marginTop: '5px' }}>{list.todo}</p>
+            <div style={{display: "flex"}}>
+              {todoTags.map(tag => (
+                <div className={todoTags.length === 0 ? 'none' : 'TodoTag'} style={{margin: "0 5px"}}>
+                  <OneTodoTag key={tag.id} tag={tag} />
+                </div>
+              ))}
+            </div>
           </div>
         </div>
+
+        {/* edit icon */}
         <div className={isMouseIn ? 'editTools' : 'editToolsDisabeled'}>
-          {/* Edit */}
-          <Button variant='text' onClick={() => setIsEditingTodo(true)}>
-            <ModeEditIcon color='action' />
-          </Button>
-          {/* more */}
           <Button variant='text' onClick={handleClickOpen}>
             <MoreHorizIcon />
           </Button>
-          <Dialog open={open} onClose={handleClose} fullWidth={false}
-        maxWidth={"lg"}>
-            <DialogTitle>Edit Todo</DialogTitle>
-            <DialogContent sx={{ textAlign: 'center' }}>
-              <h4 style={{ margin: '15px 0' }}>
-                Set New List Name and Todo Describtion
-              </h4>
-              <Input
-                placeholder={`${list.title}`}
-                value={newTodoTitle}
-                onChange={e => handleEditTitle(e.target.value)}
-              />{' '}
-              <br />
-              <TextareaAutosize
-                minRows={3}
-                style={{ width: 200, marginTop: '15px' }}
-                placeholder={`${list.todo}`}
-                value={newTodoText}
-                onChange={e => handleEditTodoText(e.target.value)}
-              />{' '}
-              <br />
-              <Button
-                variant='text'
-                onClick={() => {
-                  onEditTitle(list.id, newTodoTitle);
-                  onEditTodo(list.id, newTodoText);
-                  setNewTodoTitle('');
-                  setIsEditingTodo(false);
-                }}
-              >
-                Edit todo
-              </Button>
-              <Button variant='text' onClick={() => setIsEditingTodo(false)}>
-                Calcel
-              </Button>
-            </DialogContent>
-            <DialogActions>
-              <Button onClick={handleClose}>Cancel</Button>
-            </DialogActions>
-          </Dialog>
+
+          <EditTodoDialog
+            list={list}
+            open={open}
+            setOpen={setOpen}
+            todoTags={todoTags}
+          />
         </div>
       </Box>
     </div>
