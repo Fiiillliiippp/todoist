@@ -19,9 +19,11 @@ const Home = () => {
   }
   return (
     <div>
+      {/* Todo Item */}
       {lists.map(list => (
         <Todo key={list.id} list={list} />
       ))}
+      {/* adding todo */}
       {!addingList && (
         <div>
           <Button variant="text" onClick={() => setAddingList(true)}>Add Todo</Button>
@@ -36,6 +38,7 @@ const Home = () => {
           placeholder='Todo Name'
           value={newListTitle}
           onChange={e => handleTitleChange(e.target.value)}
+          autoFocus
         /> <br />
         <Input
         sx={{fontSize: 14}}
