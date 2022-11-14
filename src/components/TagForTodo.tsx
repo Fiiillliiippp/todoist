@@ -4,9 +4,9 @@ type Props = {
   tag: TodoTag
 };
 
-const OneTodoTag = ({tag}: Props) => {
+const TagForTodo = ({tag}: Props) => {
   return <div>
     <div>{tag.tagText}</div>
   </div>;
 };
-export default OneTodoTag;
+export default TagForTodo;
