@@ -9,7 +9,7 @@ export type TodoTag = {
   tagText: string
 }
 
-export type TodoList = {
+export type TodayTodo = {
   id: number,
   title: string,
   todo: string,
@@ -19,4 +19,4 @@ export type TodoList = {
 }
 
 export type TodoTags = TodoTag[]
-export type TodoLists = TodoList[]
+export type TodayTodos = TodayTodo[]

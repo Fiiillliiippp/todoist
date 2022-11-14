@@ -9,8 +9,8 @@ import {
   MenuItem,
 } from '@mui/material';
 import { useState } from 'react';
-import { TodoTags } from '../types/types';
-import { useAppContainer } from './Context';
+import { TodoTags } from '../../../types/types';
+import { useAppContainer } from '../../Context';
 
 type Props = {
   todoTags: TodoTags;

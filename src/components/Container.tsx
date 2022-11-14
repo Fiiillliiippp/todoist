@@ -1,9 +1,9 @@
 import { useState } from 'react';
-import { TodoLists, TodoTags } from '../types/types';
+import { TodayTodos, TodoTags } from '../types/types';
 import { Provider } from './Context';
 
 export type AppState = {
-  lists: TodoLists;
+  lists: TodayTodos;
   todoTags: TodoTags;
   onAddNewList: (val: string, todoVal: string) => void;
   onEditTitle: (idList: number, value: string) => void;
@@ -17,7 +17,7 @@ type Props = {
   children: (props: AppState) => JSX.Element;
 };
 const Container = ({ children }: Props) => {
-  const [todoLists, setTodoLists] = useState<TodoLists>([]);
+  const [todoLists, setTodoLists] = useState<TodayTodos>([]);
   const [todoTags, setTodoTags] = useState<TodoTags>([]);
 
   const handleAddNewTodoList = (val: string, todoVal: string) => {

@@ -1,4 +1,4 @@
-import { TodoList, TodoTag } from '../types/types';
+import { TodoTag } from "../../types/types";
 
 type Props = {
   tag: TodoTag
