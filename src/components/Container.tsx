@@ -1,3 +1,4 @@
+import { TagSharp } from '@mui/icons-material';
 import { useState } from 'react';
 import { TodoLists, TodoTags } from '../types/types';
 import { Provider } from './Context';
@@ -8,9 +9,15 @@ export type AppState = {
   onAddNewList: (val: string, todoVal: string) => void;
   onEditTitle: (idList: number, value: string) => void;
   onEditTodo: (idList: number, value: string) => void;
-  onTodoDone: (idList: number, checked: boolean) => void;
+  onTodoDone: (idList: number) => void;
   onPriorityChange: (idList: number, value: number) => void;
   onAddTodoTag: (tagText: string) => void;
+
+  onAddTodo(listId: number, todo: { title: string; desc: string }): void;
+  listTags: {
+    id: number;
+    text: string;
+  }[];
 };
 
 type Props = {
@@ -19,12 +26,27 @@ type Props = {
 const Container = ({ children }: Props) => {
   const [todoLists, setTodoLists] = useState<TodoLists>([]);
   const [todoTags, setTodoTags] = useState<TodoTags>([]);
+  const [listTags, setListTags] = useState<
+    {
+      id: number;
+      text: string;
+    }[]
+  >([]);
 
-  const handleAddNewTodoList = (val: string, todoVal: string) => {
-    setTodoLists(prevList => [
-      ...prevList,
-      { id: prevList.length + 1, title: val, todo: todoVal, priority: 4, todoTag: [] },
-    ]);
+  const handleAddNewTodoList = (title: string) => {
+    setTodoLists(prevLists => {
+      return [
+        ...prevLists,
+        {
+          id: prevLists.length + 1,
+          priority: 4,
+          title,
+          todos: [],
+          listDone: false,
+          listTags: [],
+        },
+      ];
+    });
   };
 
   const handleEditTitle = (idList: number, value: string) => {
@@ -54,11 +76,14 @@ const Container = ({ children }: Props) => {
     );
   };
 
-  const handleTodoIsDone = (idList: number, checked: boolean) => {
+  const handleTodoIsDone = (listId: number) => {
     setTodoLists(prevList =>
       prevList.filter(list => {
-        if (list.id === idList && checked === true) {
-          return list.id !== idList;
+        if (list.id === listId) {
+          return {
+            ...list,
+            done: true,
+          };
         }
         return list;
       })
@@ -74,7 +99,7 @@ const Container = ({ children }: Props) => {
         return list;
       })
     );
-  };;
+  };
 
   const handleAddTodoTag = (tagText: string) => {
     setTodoTags(prevTags => [
@@ -83,6 +108,84 @@ const Container = ({ children }: Props) => {
     ]);
   };
 
+  const handleAddTag = (tagText: string, listId: number, todoid: number) => {
+    const existingTag = listTags.find(tag => tag.text === tagText); // tu pozrieš či taky tag už maš
+    if (!existingTag) {
+      // tu si ho vytvoriš ked ho nemaš
+      const newTag = {
+        //lebo ho pridavaš k tagom a zaroven k listu/todo
+        id: listTags.length + 1,
+        text: tagText,
+      };
+      setListTags(prev => {
+        return [...prev, newTag];
+      });
+      setTodoLists(prevLists => {
+        return prevLists.map(list => {
+          if (list.id === listId) {
+            list.todos.map(todo => {
+              if (todo.id === todoid) {
+                return {
+                  ...todo,
+                  tags: [...todo.tags, newTag],
+                };
+              }
+
+              return todo;
+            });
+          }
+
+          return list;
+        });
+      });
+    } else {
+      setTodoLists(prevLists => {
+        return prevLists.map(list => {
+          if (list.id === listId) {
+            list.todos.map(todo => {
+              if (todo.id === todoid) {
+                return {
+                  ...todo,
+                  tags: [...todo.tags, existingTag],
+                };
+              }
+
+              return todo;
+            });
+          }
+
+          return list;
+        });
+      });
+    }
+  };
+
+  const handleAddTodo = (
+    listId: number,
+    todo: { title: string; desc: string }
+  ) => {
+    setTodoLists(prevLists => {
+      return prevLists.map(list => {
+        if (listId === list.id) {
+          return {
+            ...list,
+            todos: [
+              ...list.todos,
+              {
+                id: list.todos.length + 1,
+                title: todo.title,
+                desc: todo.desc,
+                done: false,
+                tags: [],
+              },
+            ],
+          };
+        }
+
+        return list;
+      });
+    });
+  };
 
   const appState: AppState = {
     lists: todoLists,
@@ -93,6 +196,9 @@ const Container = ({ children }: Props) => {
     onTodoDone: handleTodoIsDone,
     onPriorityChange: handlePriorityChanging,
     onAddTodoTag: handleAddTodoTag,
+
+    onAddTodo: handleAddTodo,
+    listTags,
   };
 
   return <Provider value={appState}>{children(appState)}</Provider>;

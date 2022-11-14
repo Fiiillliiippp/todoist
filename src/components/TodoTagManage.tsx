@@ -13,10 +13,13 @@ import { TodoTags } from '../types/types';
 import { useAppContainer } from './Context';
 
 type Props = {
-  todoTags: TodoTags;
+  listTags: {
+    id: number;
+    text: string;
+  }[];
 };
 
-const TodoTagManage = ({ todoTags }: Props) => {
+const TodoTagManage = ({ listTags }: Props) => {
   const [newTodoTag, setNewTodoTag] = useState('');
   const { onAddTodoTag } = useAppContainer();
   const [addingNewTodoTag, setAddingNewTodoTag] = useState<boolean>(false);
@@ -24,7 +27,7 @@ const TodoTagManage = ({ todoTags }: Props) => {
     setNewTodoTag(text);
   };
 
-  if (addingNewTodoTag || todoTags.length === 0) {
+  if (addingNewTodoTag || listTags.length === 0) {
     return (
       <div>
         <>
@@ -38,7 +41,7 @@ const TodoTagManage = ({ todoTags }: Props) => {
           <Button
             onClick={() => {
               onAddTodoTag(newTodoTag);
-              setNewTodoTag("")
+              setNewTodoTag('');
               setAddingNewTodoTag(false);
             }}
           >
@@ -54,8 +57,8 @@ const TodoTagManage = ({ todoTags }: Props) => {
       <FormControl fullWidth>
         <InputLabel>Select Tag</InputLabel>
         <Select>
-          {todoTags.map(tag => (
-            <MenuItem>{tag.tagText}</MenuItem>
+          {listTags.map(tag => (
+            <MenuItem>{tag.text}</MenuItem>
           ))}
           <MenuItem onClick={() => setAddingNewTodoTag(true)}>
             Add New Tag

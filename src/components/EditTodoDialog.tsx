@@ -27,12 +27,24 @@ type Props = {
 };
 
 const EditTodoDialog = ({ list, open, setOpen, todoTags }: Props) => {
-  const { onEditTitle, onEditTodo, onPriorityChange, onAddTodoTag } =
-    useAppContainer();
-  const [newTodoTitle, setNewTodoTitle] = useState('');
+  const {
+    onEditTitle,
+    onEditTodo,
+    onPriorityChange,
+    onAddTodoTag,
+    onAddTodo,
+    listTags,
+  } = useAppContainer();
+  const [newTodoTitle, setNewTodoTitle] = useState(list.title);
   const [newTodoText, setNewTodoText] = useState('');
   const [isEditingTodo, setIsEditingTodo] = useState<boolean>(false);
   const [priority, setPriority] = useState('');
+  const [isAddingNewTodo, setIsAddingNewTodo] = useState<boolean>(false);
+
+  const [newTodo, setNewTodo] = useState<{ title: string; desc: string }>({
+    title: '',
+    desc: '',
+  });
 
   // const [open, setOpen] = React.useState(false);
 
@@ -54,6 +66,14 @@ const EditTodoDialog = ({ list, open, setOpen, todoTags }: Props) => {
     setOpen(false);
   };
 
+  const handleSaveNewTodo = () => {
+    onAddTodo(list.id, newTodo);
+    setNewTodo({
+      title: '',
+      desc: '',
+    });
+    setIsAddingNewTodo(false);
+  };
 
   return (
     <div>
@@ -66,22 +86,75 @@ const EditTodoDialog = ({ list, open, setOpen, todoTags }: Props) => {
         <DialogTitle>Edit Todo</DialogTitle>
         {/* editing todo title and todo text */}
         <DialogContent sx={{ textAlign: 'center' }}>
-          <h4 style={{ margin: '15px 0' }}>
-            Set New List Name and Todo Describtion
-          </h4>
+          <h4 style={{ margin: '15px 0' }}>Set New List Name and add Todos</h4>
           <Input
-            placeholder={`${list.title}`}
+            placeholder={list.title}
             value={newTodoTitle}
             onChange={e => handleEditTitle(e.target.value)}
-          />{' '}
-          <br />
-          <TextareaAutosize
+          />
+          <br /> {/* //TODO no go */}
+          {list.todos.length === 0 && <div>no todos yet</div>}
+          {list.todos.length !== 0 && (
+            <div>
+              {list.todos.map(todo => (
+                <div>
+                  <h6>{todo.title}</h6>
+                  <p>{todo.desc}</p>
+                </div>
+              ))}
+            </div>
+          )}
+          {isAddingNewTodo && (
+            <div>
+              <Input
+                placeholder='Todo title'
+                value={newTodo.title}
+                onChange={e =>
+                  setNewTodo(prev => ({
+                    ...prev,
+                    title: e.target.value,
+                  }))
+                }
+              />
+              <br />
+              <TextareaAutosize
+                placeholder='desc'
+                value={newTodo.desc}
+                onChange={e =>
+                  setNewTodo(prev => ({
+                    ...prev,
+                    desc: e.target.value,
+                  }))
+                }
+              />
+              <div>
+                <Button onClick={() => setIsAddingNewTodo(false)}>
+                  Cancel
+                </Button>
+                <Button
+                  variant='contained'
+                  disabled={
+                    newTodo.title.length === 0 || newTodo.desc.length === 0
+                  }
+                  onClick={handleSaveNewTodo}
+                >
+                  Save
+                </Button>
+              </div>
+            </div>
+          )}
+          {!isAddingNewTodo && (
+            <Button variant='outlined' onClick={() => setIsAddingNewTodo(true)}>
+              Add todo
+            </Button>
+          )}
+          {/* <TextareaAutosize
             minRows={3}
             style={{ width: 200, marginTop: '15px' }}
-            placeholder={`${list.todo}`}
+            placeholder='string'
             value={newTodoText}
             onChange={e => handleEditTodoText(e.target.value)}
-          />{' '}
+          /> */}
           <br />
           <Button
             variant='text'
@@ -163,7 +236,7 @@ const EditTodoDialog = ({ list, open, setOpen, todoTags }: Props) => {
             </label>
           </Box>
           <hr />
-          <TodoTagManage todoTags={todoTags} />
+          <TodoTagManage listTags={listTags} />
         </DialogContent>
         <DialogActions>
           <Button onClick={handleClose}>Cancel</Button>

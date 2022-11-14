@@ -29,7 +29,7 @@ const Todo = ({ list }: Props) => {
   //Todo
   const handleTodoDone = () => {
     setTodoIsChecked(!todoIsChecked);
-    onTodoDone(list.id, todoIsChecked);
+    onTodoDone(list.id);
   };
 
   if (isEditingTodo) {
@@ -85,14 +85,33 @@ const Todo = ({ list }: Props) => {
           </div>
           <div>
             <h2 style={{ margin: '0px', marginTop: '5px' }}>{list.title}</h2>
-            <p style={{ margin: '0px', marginTop: '5px' }}>{list.todo}</p>
-            <div style={{display: "flex"}}>
+            {list.todos.map(t => (
+              <div style={{ border: '2px solid red' }}>
+                {t.title}
+                <div>
+                  <h3>Tags</h3>
+                  {t.tags.map(tag => (
+                    <div>{tag.tagText}</div>
+                  ))}
+                </div>
+              </div>
+            ))}
+            <div style={{ display: 'flex' }}>
               {todoTags.map(tag => (
-                <div className={todoTags.length === 0 ? 'none' : 'TodoTag'} style={{margin: "0 5px"}}>
+                <div
+                  className={todoTags.length === 0 ? 'none' : 'TodoTag'}
+                  style={{ margin: '0 5px' }}
+                >
                   <TagForTodo key={tag.id} tag={tag} />
                 </div>
               ))}
             </div>
+          </div>
+          <div>
+            <h1>tags</h1>
+            {list.listTags.map(tag => (
+              <p>{tag.text}</p>
+            ))}
           </div>
         </div>
 
