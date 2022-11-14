@@ -7,7 +7,7 @@ import { Button } from '@mui/material';
 import React from 'react';
 import EditTodoDialog from './EditTodoDialog';
 import EditingTodoItem from './EditingTodoItem';
-import OneTodoTag from './OneTodoTag';
+import TagForTodo from './TagForTodo';
 
 type Props = {
   list: TodoList;
@@ -89,7 +89,7 @@ const Todo = ({ list }: Props) => {
             <div style={{display: "flex"}}>
               {todoTags.map(tag => (
                 <div className={todoTags.length === 0 ? 'none' : 'TodoTag'} style={{margin: "0 5px"}}>
-                  <OneTodoTag key={tag.id} tag={tag} />
+                  <TagForTodo key={tag.id} tag={tag} />
                 </div>
               ))}
             </div>

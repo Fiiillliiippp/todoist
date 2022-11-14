@@ -23,7 +23,7 @@ const Container = ({ children }: Props) => {
   const handleAddNewTodoList = (val: string, todoVal: string) => {
     setTodoLists(prevList => [
       ...prevList,
-      { id: prevList.length + 1, title: val, todo: todoVal, priority: 4 },
+      { id: prevList.length + 1, title: val, todo: todoVal, priority: 4, todoTag: [] },
     ]);
   };
 
@@ -74,7 +74,7 @@ const Container = ({ children }: Props) => {
         return list;
       })
     );
-  };
+  };;
 
   const handleAddTodoTag = (tagText: string) => {
     setTodoTags(prevTags => [
@@ -82,6 +82,7 @@ const Container = ({ children }: Props) => {
       { id: prevTags.length + 1, tagText: tagText },
     ]);
   };
+
 
   const appState: AppState = {
     lists: todoLists,

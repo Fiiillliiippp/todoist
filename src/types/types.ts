@@ -14,6 +14,7 @@ export type TodoList = {
   title: string,
   todo: string,
   priority: number,
+  todoTag: TodoTag[]
   //priority from height to low---1,2,3,4
 }
 
