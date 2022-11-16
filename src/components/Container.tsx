@@ -46,7 +46,7 @@ const Container = ({ children }: Props) => {
         priority: 4,
         listTags: [],
       },
-    ]);
+ ]);
   };
 
   const handleEditTitle = (idList: number, value: string) => {
@@ -96,7 +96,7 @@ const Container = ({ children }: Props) => {
         return list;
       })
     );
-  };
+  };;
 
   const handleAddTodoTag = (tagText: string) => {
     setTodoTags(prevTags => [
