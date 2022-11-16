@@ -9,14 +9,27 @@ export type TodoTag = {
   tagText: string
 }
 
-export type TodoList = {
+export type TodayTodo = {
   id: number,
   title: string,
   todo: string,
   priority: number,
-  todoTag: TodoTag[]
+  listTags: TodoTag[]
   //priority from height to low---1,2,3,4
 }
 
+export type ProjectType = {
+  id: number, 
+  text: string,
+  done: boolean
+}
+
+export type ProjectList = {
+  id: number,
+  title: string,
+  todos: ProjectType[],
+}
+
 export type TodoTags = TodoTag[]
-export type TodoLists = TodoList[]
+export type TodayTodos = TodayTodo[]
+export type ProjectLists = ProjectList[]
