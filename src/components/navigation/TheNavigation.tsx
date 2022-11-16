@@ -7,6 +7,7 @@ const TheNavigation = () => {
       <Link to={`${routes.home}`}>Home</Link>
       <Link to={`${routes.calendar}`}>Calendar</Link>
       <Link to={`${routes.filters}`}>Filters</Link>
+      <Link to={`${routes.projects}`}>Projects</Link>
     </nav>
   )
 }

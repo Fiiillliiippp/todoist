@@ -9,16 +9,17 @@ import {
   MenuItem,
 } from '@mui/material';
 import { useState } from 'react';
-import { TodoTags } from '../../../types/types';
+import { TodayTodo, TodoTags } from '../../../types/types';
 import { useAppContainer } from '../../Context';
 
 type Props = {
   todoTags: TodoTags;
+  list: TodayTodo;
 };
 
-const TodoTagManage = ({ todoTags }: Props) => {
+const TodoTagManage = ({ todoTags, list }: Props) => {
   const [newTodoTag, setNewTodoTag] = useState('');
-  const { onAddTodoTag } = useAppContainer();
+  const { onCreateTodoTag, onAddTodoTag } = useAppContainer();
   const [addingNewTodoTag, setAddingNewTodoTag] = useState<boolean>(false);
   const handleNewTodoTag = (text: string) => {
     setNewTodoTag(text);
@@ -37,8 +38,8 @@ const TodoTagManage = ({ todoTags }: Props) => {
           <br />
           <Button
             onClick={() => {
-              onAddTodoTag(newTodoTag);
-              setNewTodoTag("")
+              onAddTodoTag(newTodoTag, list.id);
+              setNewTodoTag('');
               setAddingNewTodoTag(false);
             }}
           >
@@ -55,7 +56,7 @@ const TodoTagManage = ({ todoTags }: Props) => {
         <InputLabel>Select Tag</InputLabel>
         <Select>
           {todoTags.map(tag => (
-            <MenuItem>{tag.tagText}</MenuItem>
+            <MenuItem key={tag.id}>{tag.tagText}</MenuItem>
           ))}
           <MenuItem onClick={() => setAddingNewTodoTag(true)}>
             Add New Tag
@@ -64,43 +65,6 @@ const TodoTagManage = ({ todoTags }: Props) => {
       </FormControl>
     );
   }
-  return (
-    // <Box>
-    //   {todoTags.length === 0 ? (
-    //     <div>
-    //       <>
-    //         <Typography variant='body2'>No tags, add one</Typography>
-    //         <Input
-    //           placeholder='New Tag'
-    //           value={newTodoTag}
-    //           onChange={e => handleNewTodoTag(e.target.value)}
-    //         />{' '}
-    //         <br />
-    //         <Button
-    //           onClick={() => {
-    //             onAddTodoTag(newTodoTag);
-    //             setAddingNewTodoTag(false);
-    //           }}
-    //         >
-    //           Create Todo Tag
-    //         </Button>
-    //       </>
-    //     </div>
-    //   ) : (
-    //     <FormControl fullWidth>
-    //       <InputLabel>Select Tag</InputLabel>
-    //       <Select>
-    //         {todoTags.map(tag => (
-    //           <MenuItem>{tag.tagText}</MenuItem>
-    //         ))}
-    //         <MenuItem onClick={() => setAddingNewTodoTag(true)}>
-    //           Add New Tag
-    //         </MenuItem>
-    //       </Select>
-    //     </FormControl>
-    //   )}
-    // </Box>
-    <p>Tags</p>
-  );
+  return <p>Tags</p>;
 };
 export default TodoTagManage;

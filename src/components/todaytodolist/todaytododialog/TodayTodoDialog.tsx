@@ -42,7 +42,7 @@ const TodayTodoDialog = ({ list, open, setOpen, todoTags }: Props) => {
           <EditTodayTodoPriority list={list} />
           <hr />
 
-          <TodoTagManage todoTags={todoTags} />
+          <TodoTagManage todoTags={todoTags} list={list} />
         </DialogContent>
 
         <DialogActions>
