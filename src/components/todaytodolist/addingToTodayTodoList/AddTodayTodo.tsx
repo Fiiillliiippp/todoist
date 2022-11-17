@@ -4,7 +4,7 @@ import { useState } from 'react';
 import { useAppContainer } from '../../Context';
 
 const AddTodayTodo = () => {
-  const { lists, onAddNewList } = useAppContainer();
+  const { onAddNewList } = useAppContainer();
   const [newListTitle, setNewListTitle] = useState('');
   const [newTodoItem, setNewTodoItem] = useState('');
   const [addingList, setAddingList] = useState<boolean>(false);
