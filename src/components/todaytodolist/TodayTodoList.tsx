@@ -17,7 +17,7 @@ const TodayTodoList = ({ list }: Props) => {
   const [isMouseIn, setIsMouseIn] = useState<boolean>(false);
 
   // ! MUI
-  const [open, setOpen] = React.useState(false);
+  const [open, setOpen] = useState(false);
 
   const handleClickOpen = () => {
     setOpen(true);

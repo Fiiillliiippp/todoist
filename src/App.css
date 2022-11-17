@@ -53,3 +53,10 @@
 .none {
   display: none;
 }
+
+.projectTodoTrue {
+  background: rgb(121, 255, 121);
+}
+.projectTodoTrue:hover {
+  background: rgb(4, 202, 4);
+}
