@@ -1,6 +1,7 @@
 import { Box, Typography } from '@mui/material';
 import { ProjectList } from '../../types/types';
 import AddProjectTodo from './AddProjectTodo';
+import ProjectTodo from './ProjectTodo';
 
 type Props = {
   projectList: ProjectList;
@@ -10,7 +11,7 @@ const ProjectCard = ({ projectList }: Props) => {
   return (
     <Box
       sx={{
-        maxWidth: 300,
+        width: 300,
         margin: 'auto',
         border: '1px solid gray',
         borderRadius: 2,
@@ -25,11 +26,9 @@ const ProjectCard = ({ projectList }: Props) => {
         {projectList.title}
       </Typography>
       {projectList.todos.map(todo => (
-        <Typography variant='body2' key={todo.id}>
-          {todo.text}
-        </Typography>
+        <ProjectTodo key={todo.id} todo={todo} projectList={projectList} />
       ))}
-      <div style={{textAlign: "center"}}>
+      <div style={{ textAlign: 'center' }}>
         <AddProjectTodo projectList={projectList} />
       </div>
     </Box>

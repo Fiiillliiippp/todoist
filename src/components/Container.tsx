@@ -20,6 +20,9 @@ export type AppState = {
   onAddTodoTag: (tagText: string, listId: number) => void;
   onAddProjectList: (todoListTitle: string) => void;
   onAddProjectTodo: (listId: number, todoText: string) => void;
+  onProjectTodoDone: (listId: number, todoId: number) => void;
+  onEditProjectTitle: (listId: number, newListTitle: string) => void;
+  onEditProjectTodoText:(listId: number, todoId: number, newTodoText: string) => void;
 };
 
 type Props = {
@@ -29,12 +32,6 @@ const Container = ({ children }: Props) => {
   const [todayTodoLists, settodayTodoLists] = useState<TodayTodos>([]);
   const [todoTags, setTodoTags] = useState<TodoTags>([]);
   const [projectLists, setProjectLists] = useState<ProjectLists>([]);
-  const [listTags, setListTags] = useState<
-    {
-      id: number;
-      text: string;
-    }[]
-  >([]);
 
   const handleAddNewTodoList = (val: string, todoVal: string) => {
     settodayTodoLists(prevList => [
@@ -46,7 +43,7 @@ const Container = ({ children }: Props) => {
         priority: 4,
         listTags: [],
       },
- ]);
+    ]);
   };
 
   const handleEditTitle = (idList: number, value: string) => {
@@ -96,7 +93,7 @@ const Container = ({ children }: Props) => {
         return list;
       })
     );
-  };;
+  };
 
   const handleAddTodoTag = (tagText: string) => {
     setTodoTags(prevTags => [
@@ -106,49 +103,36 @@ const Container = ({ children }: Props) => {
   };
 
   const handleAddTag = (tagText: string, listId: number) => {
-    const existingTag = todayTodoLists.map(list =>
-      list.listTags.find(tag => tag.tagText === tagText)
-    );
-    if (existingTag) {
-      setTodoTags(prevTags => [
-        ...prevTags,
-        { id: prevTags.length + 1, tagText: tagText },
-      ]);
+    const existingTag = todoTags.find(tag => tag.tagText === tagText);
+
+    if (!existingTag) {
       const newTag = {
-        id: listTags.length + 1,
+        id: todoTags.length + 1,
         tagText: tagText,
       };
+      setTodoTags(prevTags => [...prevTags, newTag]);
       settodayTodoLists(prevLists => {
         return prevLists.map(list => {
           if (list.id === listId) {
-            list.listTags.map(tag => {
-              return {
-                ...tag,
-                newTag,
-              };
-            });
-            // console.log("?????,");
+            return {
+              ...list,
+              listTags: [...list.listTags, newTag],
+            };
           }
+
           return list;
         });
       });
     } else {
-      const newTag = {
-        id: listTags.length + 1,
-        tagText: tagText,
-      };
       settodayTodoLists(prevLists => {
         return prevLists.map(list => {
           if (list.id === listId) {
-            // console.log("!!!!");
-
-            list.listTags.map(tag => {
-              return {
-                ...tag,
-                newTag,
-              };
-            });
+            return {
+              ...list,
+              listTags: [...list.listTags, existingTag],
+            };
           }
+
           return list;
         });
       });
@@ -183,6 +167,67 @@ const Container = ({ children }: Props) => {
     });
   };
 
+  const handleProjectTodoDone = (listId: number, todoId: number) => {
+    setProjectLists(prevList => {
+      return prevList.map(list => {
+        if (list.id === listId) {
+          return {
+            ...list,
+            todos: list.todos.map(todo => {
+              if (todo.id === todoId) {
+                return {
+                  ...todo,
+                  done: !todo.done,
+                };
+              }
+
+              return todo;
+            }),
+          };
+        }
+
+        return list;
+      });
+    });
+  };
+
+  const handleEditProjectTitle = (listId: number, newListTitle: string) => {
+    setProjectLists(prevList =>
+      prevList.map(list => {
+        if (list.id === listId) {
+          if (newListTitle.length !== 0) {
+            return { ...list, title: newListTitle };
+          }
+
+          return { ...list };
+        }
+
+        return list;
+      })
+    );
+  };
+
+  const handleEditProjectTodoText = (listId: number, todoId: number, newTodoText: string) => {
+    setProjectLists(prevLists => {
+      return prevLists.map(list => {
+        if(list.id === listId) {
+          return {
+            ...list, 
+            todos: list.todos.map(todo => {
+              if(todo.id === todoId) {
+                return {...todo, text: newTodoText}
+              }
+
+              return {...todo}
+            })
+          }
+        }
+
+        return list
+      })
+    })
+  }
+
   const appState: AppState = {
     lists: todayTodoLists,
     todoTags: todoTags,
@@ -196,6 +241,9 @@ const Container = ({ children }: Props) => {
     onAddTodoTag: handleAddTag,
     onAddProjectList: handleAddNewProjectList,
     onAddProjectTodo: handleAddProjectTodo,
+    onProjectTodoDone: handleProjectTodoDone,
+    onEditProjectTitle: handleEditProjectTitle,
+    onEditProjectTodoText: handleEditProjectTodoText
   };
 
   return <Provider value={appState}>{children(appState)}</Provider>;

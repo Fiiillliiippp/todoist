@@ -24,9 +24,11 @@ const AddProjectTitle = () => {
           sx={{ margin: 1 }}
           variant='text'
           onClick={() => {
-            onAddProjectList(newProjectListTitle);
-            setIsAddingNewTitle(false);
-            setNewProjectListTitle('');
+            if(newProjectListTitle.trim().length !== 0) {
+              onAddProjectList(newProjectListTitle);
+              setIsAddingNewTitle(false);
+              setNewProjectListTitle('');
+            }
           }}
         >
           Add TodoList
