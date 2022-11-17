@@ -2,7 +2,6 @@ import { Box } from '@mui/material';
 import { useState } from 'react';
 import MoreHorizIcon from '@mui/icons-material/MoreHoriz';
 import { Button } from '@mui/material';
-import React from 'react';
 import { TodayTodo } from '../../types/types';
 import { useAppContainer } from '../Context';
 import TodayTodoContent from './editTodayTodoList/TodayTodoContent';

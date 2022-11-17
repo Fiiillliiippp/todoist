@@ -8,7 +8,7 @@ type Props = {
 };
 
 const TodayTodoContent = ({ list }: Props) => {
-  const { todoTags, onTodoDone } = useAppContainer();
+  const { onTodoDone } = useAppContainer();
 
   const [todoIsChecked, setTodoIsChecked] = useState<boolean>(true);
   const handleTodoDone = () => {

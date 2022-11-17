@@ -7,10 +7,6 @@ import {
 } from '@mui/material';
 import { Dispatch, SetStateAction } from 'react';
 import { ProjectList, ProjectType } from '../../types/types';
-import EditingTodoItem from '../todaytodolist/todaytododialog/EditingTodoItem';
-import EditTodayTodoPriority from '../todaytodolist/todaytododialog/EditTodayTodoPriority';
-import TodoTagManage from '../todaytodolist/todaytododialog/TodoTagManage';
-import EditProjectItemPriority from './EditProjectItem';
 import EditProjectItem from './EditProjectItem';
 
 type Props = {
