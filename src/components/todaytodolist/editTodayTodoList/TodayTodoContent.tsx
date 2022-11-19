@@ -2,6 +2,7 @@ import { Checkbox } from '@mui/material';
 import { useState } from 'react';
 import { TodayTodo } from '../../../types/types';
 import { useAppContainer } from '../../Context';
+import TagForTodo from '../TagForTodo';
 
 type Props = {
   list: TodayTodo;
@@ -30,13 +31,13 @@ const TodayTodoContent = ({ list }: Props) => {
       <div>
         <h2 style={{ margin: '0px', marginTop: '5px' }}>{list.title}</h2>
         <p style={{ margin: '0px', marginTop: '5px' }}>{list.todo}</p>
-        {/* <div style={{ display: 'flex' }}>
-          {todoTags.map(tag => (
-                <div className={todoTags.length === 0 ? 'none' : 'TodoTag'} style={{margin: "0 5px"}}>
+        <div style={{ display: 'flex' }}>
+          {list.listTags.map(tag => (
+                <div className={list.listTags.length === 0 ? 'none' : 'TodoTag'} style={{margin: "0 5px"}}>
                   <TagForTodo key={tag.id} tag={tag} />
                 </div>
               ))}
-        </div> */}
+        </div>
       </div>
     </div>
   );

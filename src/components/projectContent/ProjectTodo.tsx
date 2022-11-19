@@ -49,7 +49,7 @@ const ProjectTodo = ({ todo, projectList }: Props) => {
       </label>
 
       <div className={isMouseIn ? 'editTools' : 'editToolsDisabeled'}>
-        <Button variant='text' onClick={handleClickOpen}>
+        <Button variant='text' size='small' onClick={handleClickOpen}>
           <MoreHorizIcon />
         </Button>
 

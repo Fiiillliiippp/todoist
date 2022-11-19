@@ -22,7 +22,6 @@ const TodayTodoList = ({ list }: Props) => {
     setOpen(true);
   };
 
-
   return (
     <div>
       <Box

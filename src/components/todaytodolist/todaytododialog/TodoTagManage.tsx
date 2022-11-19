@@ -1,12 +1,11 @@
 import {
-  Box,
   Typography,
   Input,
   Button,
   FormControl,
   InputLabel,
   Select,
-  MenuItem,
+  MenuItem
 } from '@mui/material';
 import { useState } from 'react';
 import { TodayTodo, TodoTags } from '../../../types/types';
@@ -19,8 +18,9 @@ type Props = {
 
 const TodoTagManage = ({ todoTags, list }: Props) => {
   const [newTodoTag, setNewTodoTag] = useState('');
-  const { onCreateTodoTag, onAddTodoTag } = useAppContainer();
+  const { onAddTodoTag } = useAppContainer();
   const [addingNewTodoTag, setAddingNewTodoTag] = useState<boolean>(false);
+  const [selectedTag, setSelectedTag] = useState<string>('');
   const handleNewTodoTag = (text: string) => {
     setNewTodoTag(text);
   };
@@ -50,19 +50,33 @@ const TodoTagManage = ({ todoTags, list }: Props) => {
     );
   }
 
+  const handleChange = (event: any) => {
+    setSelectedTag(event.target.value);
+  };
+
   if (!addingNewTodoTag) {
     return (
-      <FormControl fullWidth>
-        <InputLabel>Select Tag</InputLabel>
-        <Select  >
-          {todoTags.map(tag => (
-            <MenuItem key={tag.id}>{tag.tagText}</MenuItem>
-          ))}
-          <MenuItem onClick={() => setAddingNewTodoTag(true)}>
-            Add New Tag
-          </MenuItem>
-        </Select>
-      </FormControl>
+      <div>
+        <FormControl fullWidth>
+          <InputLabel id='demo-simple-select-label'>Select Tag</InputLabel>
+          <Select
+            onChange={handleChange}
+            value={selectedTag}
+            labelId='demo-simple-select-label'
+            id='demo-simple-select'
+          >
+            {todoTags.map(tag => (
+              <MenuItem value={tag.tagText} key={tag.id}>
+                {tag.tagText}
+              </MenuItem>
+            ))}
+            <MenuItem onClick={() => setAddingNewTodoTag(true)}>
+              Add New Tag
+            </MenuItem>
+          </Select>
+        </FormControl>
+        <Button onClick={() => onAddTodoTag(selectedTag, list.id)} >Add Selected Tag</Button>
+      </div>
     );
   }
   return <p>Tags</p>;
