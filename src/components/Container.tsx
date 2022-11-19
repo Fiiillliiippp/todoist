@@ -16,13 +16,16 @@ export type AppState = {
   onEditTodo: (idList: number, value: string) => void;
   onTodoDone: (idList: number, checked: boolean) => void;
   onPriorityChange: (idList: number, value: number) => void;
-  onCreateTodoTag: (tagText: string) => void;
   onAddTodoTag: (tagText: string, listId: number) => void;
   onAddProjectList: (todoListTitle: string) => void;
   onAddProjectTodo: (listId: number, todoText: string) => void;
   onProjectTodoDone: (listId: number, todoId: number) => void;
   onEditProjectTitle: (listId: number, newListTitle: string) => void;
-  onEditProjectTodoText:(listId: number, todoId: number, newTodoText: string) => void;
+  onEditProjectTodoText: (
+    listId: number,
+    todoId: number,
+    newTodoText: string
+  ) => void;
 };
 
 type Props = {
@@ -95,15 +98,9 @@ const Container = ({ children }: Props) => {
     );
   };
 
-  const handleAddTodoTag = (tagText: string) => {
-    setTodoTags(prevTags => [
-      ...prevTags,
-      { id: prevTags.length + 1, tagText: tagText },
-    ]);
-  };
-
   const handleAddTag = (tagText: string, listId: number) => {
     const existingTag = todoTags.find(tag => tag.tagText === tagText);
+    console.log(existingTag);
 
     if (!existingTag) {
       const newTag = {
@@ -207,26 +204,33 @@ const Container = ({ children }: Props) => {
     );
   };
 
-  const handleEditProjectTodoText = (listId: number, todoId: number, newTodoText: string) => {
+  const handleEditProjectTodoText = (
+    listId: number,
+    todoId: number,
+    newTodoText: string
+  ) => {
     setProjectLists(prevLists => {
       return prevLists.map(list => {
-        if(list.id === listId) {
+        if (list.id === listId) {
           return {
-            ...list, 
+            ...list,
             todos: list.todos.map(todo => {
-              if(todo.id === todoId) {
-                return {...todo, text: newTodoText}
-              }
+              if(newTodoText.length !== 0) {
 
-              return {...todo}
+                if(todo.id === todoId) {
+                  return { ...todo, text: newTodoText}
+                } 
+                return { ...todo }
+              }
+              return { ...todo }
             })
           }
         }
 
-        return list
-      })
-    })
-  }
+        return list;
+      });
+    });
+  };
 
   const appState: AppState = {
     lists: todayTodoLists,
@@ -237,13 +241,12 @@ const Container = ({ children }: Props) => {
     onEditTodo: handleEditTodo,
     onTodoDone: handleTodoIsDone,
     onPriorityChange: handlePriorityChanging,
-    onCreateTodoTag: handleAddTodoTag,
     onAddTodoTag: handleAddTag,
     onAddProjectList: handleAddNewProjectList,
     onAddProjectTodo: handleAddProjectTodo,
     onProjectTodoDone: handleProjectTodoDone,
     onEditProjectTitle: handleEditProjectTitle,
-    onEditProjectTodoText: handleEditProjectTodoText
+    onEditProjectTodoText: handleEditProjectTodoText,
   };
 
   return <Provider value={appState}>{children(appState)}</Provider>;
