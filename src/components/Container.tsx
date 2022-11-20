@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import {
   ProjectList,
   TodayTodos,
@@ -35,6 +35,16 @@ const Container = ({ children }: Props) => {
   const [todayTodoLists, settodayTodoLists] = useState<TodayTodos>([]);
   const [todoTags, setTodoTags] = useState<TodoTags>([]);
   const [projectLists, setProjectLists] = useState<ProjectLists>([]);
+
+  //localstorage
+  useEffect(() => {
+    const LSTodayTodoLists = JSON.parse(localStorage.getItem('todayTodoLists') || '{}');
+    if (LSTodayTodoLists) settodayTodoLists(LSTodayTodoLists);
+  }, []);
+
+  useEffect(() => {
+    localStorage.setItem('todayTodoLists', JSON.stringify(todayTodoLists));
+  }, [todayTodoLists]);
 
   const handleAddNewTodoList = (val: string, todoVal: string) => {
     settodayTodoLists(prevList => [
@@ -215,22 +225,22 @@ const Container = ({ children }: Props) => {
           return {
             ...list,
             todos: list.todos.map(todo => {
-              if(newTodoText.length !== 0) {
-
-                if(todo.id === todoId) {
-                  return { ...todo, text: newTodoText}
-                } 
-                return { ...todo }
+              if (newTodoText.length !== 0) {
+                if (todo.id === todoId) {
+                  return { ...todo, text: newTodoText };
+                }
+                return { ...todo };
               }
-              return { ...todo }
-            })
-          }
+              return { ...todo };
+            }),
+          };
         }
 
         return list;
       });
     });
   };
+
 
   const appState: AppState = {
     lists: todayTodoLists,

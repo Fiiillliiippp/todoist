@@ -28,9 +28,11 @@ const AddProjectTodo = ({ projectList }: Props) => {
           sx={{ margin: 1 }}
           variant='text'
           onClick={() => {
-            onAddProjectTodo(projectList.id, newProjectTodoText);
-            setIsAddingNewTodo(false);
-            setNewProjectTodoText('');
+            if (newProjectTodoText.trim().length !== 0) {
+              onAddProjectTodo(projectList.id, newProjectTodoText);
+              setIsAddingNewTodo(false);
+              setNewProjectTodoText('');
+            }
           }}
         >
           Add Todo
